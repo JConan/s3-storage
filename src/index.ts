@@ -1,9 +1,11 @@
 import Fastify from "fastify";
 import multipart from "@fastify/multipart";
 import dotenv from "dotenv";
+import fastifyHttpProxy from "@fastify/http-proxy";
 
 // Load environment variables from .env file
 dotenv.config();
+
 import { bucketRoutes } from "./api/bucket.routes";
 import { fileRoutes } from "./api/file.routes";
 import { promises as fs } from "fs";
@@ -15,6 +17,16 @@ const fastify = Fastify({
   logger: false, // Disable Fastify's built-in logger
   bodyLimit: 1024 * 1024 * 200, // 200MB
 });
+
+// Proxy requests to Vite dev server in development
+if (process.env.NODE_ENV === "development") {
+  fastify.register(fastifyHttpProxy, {
+    upstream: "http://localhost:5173",
+    prefix: "/",
+    http2: false,
+    websocket: true,
+  });
+}
 
 // Ensure log directory exists
 const logDir = process.env.LOG_DIR || "logs";

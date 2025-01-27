@@ -2,7 +2,8 @@ import { Bucket } from "../models/bucket";
 import { promises as fs } from "fs";
 import path from "path";
 
-const STORAGE_ROOT = path.join(process.cwd(), "storage");
+const STORAGE_ROOT =
+  process.env.STORAGE_DIR || path.join(process.cwd(), "storage");
 
 export class BucketService {
   private async ensureStorageRoot() {

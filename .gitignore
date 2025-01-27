@@ -20,3 +20,4 @@ build/
 
 # Local storage
 /storage/
+/logs/

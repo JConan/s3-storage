@@ -3,7 +3,8 @@ import path from "path";
 import { File } from "../models/file";
 import { BucketService } from "./bucket.service";
 
-const STORAGE_ROOT = path.join(process.cwd(), "storage");
+const STORAGE_ROOT =
+  process.env.STORAGE_DIR || path.join(process.cwd(), "storage");
 
 // MIME type mapping
 const MIME_TYPES = {
@@ -104,6 +105,8 @@ export class FileService {
 
   async getFileInfo(bucketName: string, fileName: string): Promise<File> {
     const filePath = path.join(STORAGE_ROOT, bucketName, fileName);
+
+    console.log({ filePath });
 
     try {
       const stats = await fs.stat(filePath);

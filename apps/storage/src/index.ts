@@ -2,6 +2,7 @@ import Fastify from "fastify";
 import multipart from "@fastify/multipart";
 import dotenv from "dotenv";
 import fastifyHttpProxy from "@fastify/http-proxy";
+import fastifyStatic from "@fastify/static";
 
 // Load environment variables from .env file
 dotenv.config();
@@ -9,8 +10,8 @@ dotenv.config();
 import { bucketRoutes } from "./api/bucket.routes";
 import { fileRoutes } from "./api/file.routes";
 import { promises as fs } from "fs";
-import path from "path";
 import logger from "./config/logger";
+import { join } from "path";
 
 // Create Fastify server instance
 const fastify = Fastify({
@@ -20,14 +21,21 @@ const fastify = Fastify({
 
 console.log({ NODE_ENV: process.env.NODE_ENV });
 // Proxy requests to Vite dev server in development
-if (process.env.NODE_ENV === "production") {
+if (process.env.NODE_ENV === "development") {
+  console.log("dev mode: proxyfied / to http://localhost:5173");
   fastify.register(fastifyHttpProxy, {
     upstream: "http://localhost:5173",
     prefix: "/",
-    http2: false,
-    websocket: true,
   });
-} else console.log("no proxy registered");
+} else {
+  const root = join(__dirname, "public");
+  console.log(`prod mode: serving static files from ${root}`);
+
+  fastify.register(fastifyStatic, {
+    root, // Directory to serve files from
+    prefix: "/", // Optional: URL prefix for the served files
+  });
+}
 
 // Ensure log directory exists
 const logDir = process.env.LOG_DIR || "logs";

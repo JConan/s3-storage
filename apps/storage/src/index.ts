@@ -18,15 +18,16 @@ const fastify = Fastify({
   bodyLimit: 1024 * 1024 * 200, // 200MB
 });
 
+console.log({ NODE_ENV: process.env.NODE_ENV });
 // Proxy requests to Vite dev server in development
-if (process.env.NODE_ENV === "development") {
+if (process.env.NODE_ENV === "production") {
   fastify.register(fastifyHttpProxy, {
     upstream: "http://localhost:5173",
     prefix: "/",
     http2: false,
     websocket: true,
   });
-}
+} else console.log("no proxy registered");
 
 // Ensure log directory exists
 const logDir = process.env.LOG_DIR || "logs";

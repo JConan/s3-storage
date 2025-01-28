@@ -1,5 +1,7 @@
 <script lang="ts">
-	import '../app.css';
+	import QRForm from '../lib/QRForm.svelte';
 </script>
 
-<p>Hello</p>
+<div class="min-h-screen flex items-center justify-center bg-gray-100">
+	<QRForm />
+</div>

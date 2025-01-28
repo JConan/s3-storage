@@ -1,8 +1,13 @@
 <script lang="ts">
-	let resourceFile: FileList | null;
-	let logoFile: FileList | null;
-	let resourcePreview: string | null = null;
-	let logoPreview: string | null = null;
+	interface Props {
+		onGenerate: (inputs: { resourceFile: File; logoFile: File }) => Promise<void>;
+	}
+	const { onGenerate }: Props = $props();
+
+	let resourceFile: FileList | null = $state(null);
+	let logoFile: FileList | null = $state(null);
+	let resourcePreview: string | null = $state(null);
+	let logoPreview: string | null = $state(null);
 
 	const handleFileChange = (event: Event, type: 'resource' | 'logo') => {
 		const file = (event.target as HTMLInputElement).files?.[0];
@@ -19,14 +24,17 @@
 		}
 	};
 
-	const handleSubmit = async () => {
-		// TODO: Implement QR code generation
+	const handleSubmit = async (e: SubmitEvent) => {
+		e.preventDefault();
+
+		onGenerate({ resourceFile: resourceFile![0], logoFile: logoFile![0] });
+
 		console.log('Generating QR code with:', resourceFile, logoFile);
 	};
 </script>
 
 <div class="p-8 bg-gray-100 min-h-screen flex items-center justify-center">
-	<form on:submit|preventDefault={handleSubmit} class="max-w-4xl mx-auto grid grid-rows-2 gap-12">
+	<form onsubmit={handleSubmit} class="max-w-4xl mx-auto grid grid-rows-2 gap-12">
 		<div class="grid grid-cols-2 gap-8">
 			<label class="block text-sm font-medium text-gray-700 mb-2">
 				<div
@@ -46,7 +54,7 @@
 				<input
 					type="file"
 					bind:files={resourceFile}
-					on:change={(e) => handleFileChange(e, 'resource')}
+					onchange={(e) => handleFileChange(e, 'resource')}
 					accept="image/*, video/*, application/pdf, .doc, .docx, .xls, .xlsx"
 					class="invisible"
 				/>
@@ -67,7 +75,7 @@
 					type="file"
 					id="logo"
 					bind:files={logoFile}
-					on:change={(e) => handleFileChange(e, 'logo')}
+					onchange={(e) => handleFileChange(e, 'logo')}
 					accept="image/*"
 					class="invisible"
 				/>

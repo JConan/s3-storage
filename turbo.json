@@ -6,6 +6,11 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
     },
+    "start": {
+      "persistent": true,
+      "cache": false,
+      "env": ["PORT"]
+    },
     "dev": {
       "persistent": true,
       "cache": false

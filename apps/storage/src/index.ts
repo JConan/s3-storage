@@ -39,6 +39,7 @@ if (process.env.NODE_ENV === "development") {
 
 // Ensure log directory exists
 const logDir = process.env.LOG_DIR || "logs";
+console.log(`logs directory: ${logDir}`);
 
 // Add request logging middleware
 fastify.addHook("onRequest", async (request) => {
@@ -71,8 +72,9 @@ const start = async () => {
     // Ensure log directory exists
     await fs.mkdir(logDir, { recursive: true });
 
-    await fastify.listen({ port: 3000, host: "0.0.0.0" });
-    console.log(`Server listening on http://localhost:3000`);
+    const port = parseInt(process.env.PORT || "3000");
+    await fastify.listen({ port, host: "0.0.0.0" });
+    console.log(`Server listening on http://0.0.0.0:${port}`);
   } catch (err) {
     fastify.log.error(err);
     process.exit(1);

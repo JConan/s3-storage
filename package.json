@@ -7,10 +7,11 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "turbo run build",
+    "build": "turbo --ui stream run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
-    "test": "turbo run test"
+    "test": "turbo run test",
+    "start": "turbo --ui stream run start"
   },
   "devDependencies": {
     "turbo": "latest"

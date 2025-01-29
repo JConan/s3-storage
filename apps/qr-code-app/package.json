@@ -41,6 +41,7 @@
 	},
 	"dependencies": {
 		"@sveltejs/adapter-static": "^3.0.8",
+		"qr-code-styling": "^1.9.1",
 		"qrcode": "^1.5.4"
 	}
 }

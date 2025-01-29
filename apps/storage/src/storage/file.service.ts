@@ -66,7 +66,7 @@ export class FileService {
     const filePath = path.join(bucketPath, fileName);
 
     try {
-      await fs.writeFile(filePath, fileData);
+      const result = await fs.writeFile(filePath, fileData);
       const stats = await fs.stat(filePath);
 
       return {

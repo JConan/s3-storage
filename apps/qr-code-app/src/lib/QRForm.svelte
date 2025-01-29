@@ -1,13 +1,21 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+
 	interface Props {
-		onGenerate: (inputs: { resourceFile: File; logoFile: File }) => Promise<void>;
+		onGenerate: (inputs: { resourceFile: File; logoFile: File }) => Promise<void> | void;
 	}
 	const { onGenerate }: Props = $props();
 
-	let resourceFile: FileList | null = $state(null);
-	let logoFile: FileList | null = $state(null);
+	let resourceFile = $state(null as FileList | null);
+	let logoFile = $state(null as FileList | null);
 	let resourcePreview: string | null = $state(null);
 	let logoPreview: string | null = $state(null);
+	let formValid = $derived(resourceFile?.length && logoFile?.length);
+	let form: HTMLFormElement;
+
+	onMount(() => {
+		form.reset();
+	});
 
 	const handleFileChange = (event: Event, type: 'resource' | 'logo') => {
 		const file = (event.target as HTMLInputElement).files?.[0];
@@ -27,14 +35,12 @@
 	const handleSubmit = async (e: SubmitEvent) => {
 		e.preventDefault();
 
-		onGenerate({ resourceFile: resourceFile![0], logoFile: logoFile![0] });
-
-		console.log('Generating QR code with:', resourceFile, logoFile);
+		if (formValid) onGenerate({ resourceFile: resourceFile![0], logoFile: logoFile![0] });
 	};
 </script>
 
 <div class="p-8 bg-gray-100 min-h-screen flex items-center justify-center">
-	<form onsubmit={handleSubmit} class="max-w-4xl mx-auto grid grid-rows-2 gap-12">
+	<form bind:this={form} onsubmit={handleSubmit} class="max-w-4xl mx-auto grid grid-rows-2 gap-12">
 		<div class="grid grid-cols-2 gap-8">
 			<label class="block text-sm font-medium text-gray-700 mb-2">
 				<div
@@ -83,7 +89,8 @@
 
 			<button
 				type="submit"
-				class="col-span-2 w-full max-w-xs mx-auto px-6 py-3 bg-linear-to-t from-sky-500 to-indigo-500 text-white font-semibold rounded-lg shadow-lg hover:from-purple-700 hover:to-pink-700 transition-all transform hover:scale-105"
+				disabled={!formValid}
+				class="col-span-2 w-full max-w-xs mx-auto px-6 py-3 bg-linear-to-t from-sky-500 to-indigo-500 bg-slate-400 disabled:bg-none text-white font-semibold rounded-lg shadow-lg hover:enabled:from-purple-700 hover:enabled:to-pink-700 transition-all transform hover:enabled:scale-105"
 			>
 				Generate QR Code
 			</button>

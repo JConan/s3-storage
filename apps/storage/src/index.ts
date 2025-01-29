@@ -19,7 +19,7 @@ const fastify = Fastify({
   bodyLimit: 1024 * 1024 * 200, // 200MB
 });
 
-console.log({ NODE_ENV: process.env.NODE_ENV });
+console.log(`NODE_ENV: ${process.env.NODE_ENV}`);
 // Proxy requests to Vite dev server in development
 if (process.env.NODE_ENV === "development") {
   console.log("dev mode: proxyfied / to http://localhost:5173");
@@ -70,15 +70,6 @@ const start = async () => {
   try {
     // Ensure log directory exists
     await fs.mkdir(logDir, { recursive: true });
-
-    // Log environment configuration
-    logger.info({
-      message: "Server configuration",
-      STORAGE_DIR: process.env.STORAGE_DIR || "default",
-      LOG_DIR: process.env.LOG_DIR || "default",
-      NODE_ENV: process.env.NODE_ENV || "development",
-      PORT: 3000,
-    });
 
     await fastify.listen({ port: 3000, host: "0.0.0.0" });
     console.log(`Server listening on http://localhost:3000`);

@@ -2,9 +2,15 @@ import { promises as fs } from "fs";
 import path from "path";
 import { File } from "../models/file";
 import { BucketService } from "./bucket.service";
+import dotenv from "dotenv";
+
+// Load environment variables from .env file
+dotenv.config();
 
 const STORAGE_ROOT =
   process.env.STORAGE_DIR || path.join(process.cwd(), "storage");
+
+console.log(`File service storage directory: ${STORAGE_ROOT}`);
 
 // MIME type mapping
 const MIME_TYPES = {

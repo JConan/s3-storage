@@ -1,9 +1,15 @@
 import { Bucket } from "../models/bucket";
 import { promises as fs } from "fs";
 import path from "path";
+import dotenv from "dotenv";
+
+// Load environment variables from .env file
+dotenv.config();
 
 const STORAGE_ROOT =
   process.env.STORAGE_DIR || path.join(process.cwd(), "storage");
+
+console.log(`Bucket service storage directory: ${STORAGE_ROOT}`);
 
 export class BucketService {
   private async ensureStorageRoot() {

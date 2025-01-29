@@ -26,6 +26,7 @@ export async function fileRoutes(fastify: FastifyInstance) {
 
         return reply.code(200).send(file);
       } catch (err) {
+        console.log({ err, bucketName, fileName });
         return reply.code(400).send({
           error: err instanceof Error ? err.message : "Invalid request",
         });
